@@ -1,4 +1,5 @@
 const express = require("express")
+const mongoose = require("mongoose")
 
 const app = express()
 
@@ -6,8 +7,17 @@ app.use(express.json())
 
 const PORT = process.env.PORT || 8000
 
-app.listen(PORT, ()=>{
-    console.log(`Server running on ${PORT}`)
+
+
+const MONGODB_URL = "mongodb+srv://dsamdave:dsamdave@cluster0.ud4yxkd.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+
+
+mongoose.connect(MONGODB_URL)
+.then(()=>{
+    console.log("MongoDb Connected...")
+    app.listen(PORT, ()=>{
+        console.log(`Server running on ${PORT}`)
+    })
 })
 
 
@@ -123,9 +133,38 @@ app.post("/drugs/manufacturer-count", (req, res)=>{
 
     const { manufacturer } = req.body
 
+    if(!manufacturer){
+        return res.status(400).json({message: "Please add a manufacture"})
+    }
+
     const manufacturerCount = drugs.filter((each)=>{
         return each.manufacturer == manufacturer
     })
 
-    res.json({cpount: manufacturerCount.length, manufacturerCount})
+    res.status(200).json({
+        message: "success",
+        count: manufacturerCount.length, 
+        manufacturerCount
+    })
 })
+
+// Status Codes
+// 100 -------
+// 200, 201
+// 300, 301
+// 400, 401, 404
+// 500
+
+// C R U D  
+
+// CREATE
+// READ
+// UPDATE
+// DELETE
+
+// AUTHENTICATION
+
+
+// Relational 
+
+// Non-Relational
